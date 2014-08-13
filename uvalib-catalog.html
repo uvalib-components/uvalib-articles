@@ -2,18 +2,18 @@
 <link rel="import" href="../polymer-jsonp/polymer-jsonp.html">
 
 <!--
-Element providing interface to the U.Va. Library catalog.  An attempt to make reuse of the Library's catalog (http://search.lib.virginia.edu) easy.
+Element providing interface to the U.Va. Library articles.  An attempt to make reuse of the Library's articles (http://search.lib.virginia.edu) easy.
 
 ##### Example
 
-    <uvalib-catalog></uvalib-catalog>
+    <uvalib-articles></uvalib-articles>
 
-@element uvalib-catalog
+@element uvalib-articles
 @blurb Element providing solution to no problem in particular.
 @status alpha
-@homepage http://dougchestnut.github.io/uvalib-catalog
+@homepage http://dougchestnut.github.io/uvalib-articles
 -->
-<polymer-element name="uvalib-catalog" attributes="advanced auto query titleQuery count page facetQuery sort sortField items inclusiveFacetsJSON inclusiveFacets facets">
+<polymer-element name="uvalib-articles" attributes="advanced auto query titleQuery count page facetQuery sort sortField items inclusiveFacetsJSON inclusiveFacets facets">
 
   <template>
     <!-- auto?={{auto}} -->
@@ -24,9 +24,9 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
   <script src="../sprintf/dist/sprintf.min.js"></script>
   <script>
 
-    Polymer('uvalib-catalog', {
+    Polymer('uvalib-articles', {
       rawURL: "",
-      catalogURL: "http://www2.lib.virginia.edu/mobileAPI/catalog.json?",
+      articlesURL: "http://search.lib.virginia.edu/articles.json?",
       params: "op=AND&author=&journal=&subject=&keyword=&call_number=&published=&publication_date_start=&publication_date_end=&sort_key=relevancy&search_field=advanced&",
       
       /**
@@ -57,14 +57,14 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
       },
       makeURL: function(){
         if (this.advanced)
-          this.rawURL = this.catalogURL + 
+          this.rawURL = this.articlesURL + 
                         this.inclusiveFacetsParams +  
                         "title=" + this.titleQuery + "&" +
                         "per_page=" + this.count + "&" +
                         this.params + 
                         "callback=";
         else
-          this.rawURL = this.catalogURL + 
+          this.rawURL = this.articlesURL + 
                         "per_page=" + this.count + "&" +
                         "q=" + this.query + "&" +
                         "callback=";
@@ -80,9 +80,9 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
       titleQueryChanged: function(){this.makeURL();},
 
       /**
-       * The `catalog-response` event is fired when a response has been received from a query. 
+       * The `articles-response` event is fired when a response has been received from a query. 
        *
-       * @event catalog-response 
+       * @event articles-response 
        */
 
       /**
@@ -150,7 +150,7 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
        sort: 'score+desc,+year_multisort_i+desc',
 
       /**
-       * The `items` attribute is where the catalog result items are stored
+       * The `items` attribute is where the articles result items are stored
        *
        * @attribute items
        * @type Array
@@ -166,7 +166,7 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
       facets: {},
 
       /**
-       * The `response` is a property that holds the response from the catalogs api.
+       * The `response` is a property that holds the response from the articless api.
        *
        * @property response 
        * @type string 
@@ -196,7 +196,7 @@ Element providing interface to the U.Va. Library catalog.  An attempt to make re
         return strFacets;
       },
       onJSONPResponse: function(){
-        this.fire('catalog-response'); 
+        this.fire('articles-response'); 
       },
 
       responseChanged: function(oldValue, newValue){

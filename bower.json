@@ -1,14 +1,14 @@
 {
-  "name": "uvalib-catalog",
+  "name": "uvalib-articles",
   "version": "0.0.0",
   "authors": [
     "Doug Chestnut <dougchestnut@gmail.com>"
   ],
-  "description": "Element providing access to the U.Va. Library Catalog.",
-  "keywords": "uva, library, catalog, polymer, web-components",
-  "main": "uvalib-catalog.html",
+  "description": "Element providing access to the U.Va. Library articles.",
+  "keywords": "uva, library, articles, polymer, web-components",
+  "main": "uvalib-articles.html",
   "license": "MIT",
-  "homepage": "https://github.com/<USERNAME>/uvalib-catalog/",
+  "homepage": "https://github.com/<USERNAME>/uvalib-articles/",
   "ignore": [
     "**/.*"
   ],
