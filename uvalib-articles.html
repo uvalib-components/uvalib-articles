@@ -141,7 +141,7 @@ Example:
             notify: true,
             value: 10,
             observer: '_rowsChanged'
-          }
+          },
 
           /**
            * The page of article results to return to items.
@@ -151,7 +151,7 @@ Example:
             notify: true,
             value: 1,
             observer: '_pageChanged'
-          }
+          },
 
           _url: {
             type: String,
@@ -223,13 +223,13 @@ Example:
         if (this._params) {
           this.set('_params.per_page', this.rows);
         }
-      }
+      },
 
       _pageChanged: function() {
         if (this._params) {
           this.set('_params.page', this.page);
         }
-      }
+      },
 
       _mapResults: function(items){
         return _.map(items,function(item){
@@ -249,7 +249,7 @@ Example:
           this.page += 1;
           this.trigger = true;
         }
-      }
+      },
 
       _triggerRequest: function(){
         console.log('trigger request');
