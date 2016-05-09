@@ -123,6 +123,26 @@ Example:
             notify: true
           },
 
+          /**
+           * The number of articles to return to items.
+           */
+          rows: {
+            type: Number,
+            notify: true,
+            value: 10,
+            observer: '_rowsChanged'
+          }
+
+          /**
+           * The page of article results to return to items.
+           */
+          page: {
+            type: Number,
+            notify: true,
+            value: 1,
+            observer: '_pageChanged'
+          }
+
           _url: {
             type: String,
             value: "http://api.library.virginia.edu/search/articles.json"
@@ -130,7 +150,7 @@ Example:
 
           _params: {
             type: Object,
-            value: {q:'*'},
+            value: {q:'*', per_page:10, page:1},
             notify: true
           },
 
@@ -170,9 +190,11 @@ Example:
       _handleError: function(){
         this.fire('error');
       },
+
       _handleRequest: function(){
         this.fire('request');
       },
+
       _handleResponse: function(){
         if (this.$.ajax.lastResponse) {
           this._setItems(this._mapResults(this.$.ajax.lastResponse.docs));
@@ -180,11 +202,25 @@ Example:
           this.fire('response');
         }
       },
+
       _queryChanged: function(){
         if (this._params) {
           this.set('_params.q', this.query? this.query:'*');
         }
       },
+
+      _rowsChanged: function() {
+        if (this._params) {
+          this.set('_params.per_page', this.rows);
+        }
+      }
+
+      _pageChanged: function() {
+        if (this._params) {
+          this.set('_params.page', this.page);
+        }
+      }
+
       _mapResults: function(items){
         return _.map(items,function(item){
           return {id: item.issn+"-"+item.header.an,
@@ -193,9 +229,11 @@ Example:
                   format: item.display.type}
         });
       },
+
       generateRequest: function(){
         this.$.ajax.generateRequest();
       },
+
       areFiltersAvailable: function(selFilters){
         var filters = this.getFilters();
         for (var key in selFilters) {
@@ -211,12 +249,14 @@ Example:
         }
         return true;
       },
+
       emptyFilters: function(){
         for (var key in this._params) {
           if (key.startsWith('f['))
             delete this._params[key];
         }
       },
+
       setSelectedFilters: function(selFilters){
         this.emptyFilters();
         if (!_.isEmpty(selFilters)) {
@@ -230,9 +270,11 @@ Example:
           }
         }
       },
+
       getFilters: function(){
         return this._mapFilters(this.$.ajax.lastResponse.facets);
       },
+
       _mapFilters: function(fields){
         var facets = []
         this.filters.forEach(function(filter,i){
@@ -251,7 +293,6 @@ Example:
         }, this);
         return facets;
       },
-
 
     });
   })();
