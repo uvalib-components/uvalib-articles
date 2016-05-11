@@ -229,6 +229,14 @@ Example:
        * Update the AJAX per_page API parameter when the rows property is changed.
        */
       _rowsChanged: function() {
+        // Make sure a negative value does not occur.
+        if (this.rows < 1) {
+          this.rows = 1;
+        }
+        // Make sure the number of rows does not exceed the total count of items.
+        if (this.rows > this.count) {
+          this.rows = this.count;
+        }
         if (this._params) {
           this.set('_params.per_page', this.rows);
         }
@@ -238,6 +246,10 @@ Example:
        * Update the AJAX page API parameter when the page property is changed.
        */
       _pageChanged: function() {
+        // Make sure a negative value does not occur.
+        if (this.page < 0) {
+          this.page = 0;
+        }
         if (this._params) {
           this.set('_params.page', this.page);
         }
