@@ -22,47 +22,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
-    <test-fixture id="uvalib-articles-fixture">
+    <test-fixture id="uvalib-no-search">
       <template>
-        <uvalib-articles>
-          <h2>uvalib-articles</h2>
-        </uvalib-articles>
+        <uvalib-articles id="noSearch" ></uvalib-articles>
+      </template>
+    </test-fixture>
+    <test-fixture id="uvalib-user-experience-search">
+      <template>
+        <uvalib-articles id="uxSearch" auto query="user experience" rows="15"></uvalib-articles>
       </template>
     </test-fixture>
 
     <script>
       suite('<uvalib-articles>', function() {
 
-        var myEl;
+        var noSearch, uxSearchResults;
 
         setup(function() {
-          myEl = fixture('uvalib-articles-fixture');
+          noSearch = fixture('uvalib-no-search');
+          uxSearchResults = fixture('uvalib-user-experience-search');
         });
 
-        test('defines the "author" property', function() {
-          assert.equal(myEl.author.name, 'Dimitri Glazkov');
-          assert.equal(myEl.author.image, 'http://addyosmani.com/blog/wp-content/uploads/2013/04/unicorn.jpg');
+        // Article component with no search performed...
+        // Total count of items should be zero.
+        // Page should be 1.
+        // Rows should be ten.
+        // Items should never be null.
+        test('Article component with no search', function() {
+          assert.equal(noSearch.count, 0, 'no search does not have 0 total count');
+          assert.equal(noSearch.page, 1, 'no search does not return 1 for page');
+          assert.equal(noSearch.rows, 10, 'no search does not indicate 10 rows');
+          assert.equal(noSearch.query, "", 'no search query string is not empty');
+          assert.isNotNull(noSearch.items, 'no search items array is null');
         });
 
-        test('says hello', function() {
-          assert.equal(myEl.sayHello(), 'uvalib-articles says, Hello World!');
-
-          var greetings = myEl.sayHello('greetings Earthlings');
-          assert.equal(greetings, 'uvalib-articles says, greetings Earthlings');
+        // Trying to set article rows to a negative number should fail.
+        test('Article component with negative rows value', function() {
+          noSearch.rows = noSearch.rows - 20;
+          assert.isAbove(noSearch.rows, 0, 'no search rows is negative');
         });
 
-        test('fires lasers', function(done) {
-          myEl.addEventListener('uvalib-articles-lasers', function(event) {
-            assert.equal(event.detail.sound, 'Pew pew!');
-            done();
-          });
-          myEl.fireLasers();
+        // Page should never be negative.
+        test('Article component with negative page value', function() {
+          noSearch.page = noSearch.page - 2;
+          assert.equal(noSearch.page, 0, 'no search page is negative');
         });
 
-        test('distributed children', function() {
-          var els = myEl.getContentChildren();
-          assert.equal(els.length, 1, 'one distributed node');
-          assert.equal(els[0], myEl.querySelector('h2'), 'content distributed correctly');
+        // When auto is false changing the params should not return new results.
+        test('Article component with auto and query change', function() {
+          var total = noSearch.count;
+          noSearch.auto = false;
+          noSearch.query = "new query";
+          assert.equal(total, noSearch.count, 'no search with auto false and new query string runs automatically');
+        });
+
+        // When auto is true changing the params should return new results.
+        test('Article component with auto and query change', function() {
+          document.querySelector('#uxSearch').generateRequest();
+//          uxSearchResults.generateRequest();
+          assert.isAbove(uxSearchResults.count, 0, 'UX search with auto true and query string does not run automatically');
         });
 
       });
