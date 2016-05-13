@@ -81,9 +81,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // When auto is true changing the params should return new results.
         test('Article component with auto and query change', function(done) {
           var isDone = false;
-          uxSearchResults.generateRequest();
+          this.timeout(5000);
+          uxSearchResults.page=2;
+          uxSearchResults.rows=30;
+          uxSearchResults.auto="true";
+          uxSearchResults.query="dogs";
           uxSearchResults.addEventListener('response', function(event) {
             assert.isAbove(uxSearchResults.count, 0, 'UX search with auto true and query string does not run automatically');
+            assert.equal(uxSearchResults.page, 2, 'UX search result change request for page 2 did not work');
+            assert.equal(uxSearchResults.rows, 30, 'UX search result change for 30 rows returned did not work');
             if (!isDone) {
               isDone = true;
               done();
