@@ -22,11 +22,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <body>
 
     <!-- You can use the document as a place to set up your fixtures. -->
+
     <test-fixture id="uvalib-no-search">
       <template>
         <uvalib-articles id="noSearch" ></uvalib-articles>
       </template>
     </test-fixture>
+
     <test-fixture id="uvalib-user-experience-search">
       <template>
         <uvalib-articles id="uxSearch" query="user experience" rows="15"></uvalib-articles>
@@ -42,7 +44,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           noSearch = fixture('uvalib-no-search');
           uxSearchResults = fixture('uvalib-user-experience-search');
         });
-/*
+
         // Article component with no search performed...
         // Total count of items should be zero.
         // Page should be 1.
@@ -75,14 +77,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           noSearch.query = "new query";
           assert.equal(total, noSearch.count, 'no search with auto false and new query string runs automatically');
         });
-*/
+
         // When auto is true changing the params should return new results.
         test('Article component with auto and query change', function(done) {
-//          document.querySelector('#uxSearch').generateRequest();
+          var isDone = false;
           uxSearchResults.generateRequest();
           uxSearchResults.addEventListener('response', function(event) {
             assert.isAbove(uxSearchResults.count, 0, 'UX search with auto true and query string does not run automatically');
-            done();
+            if (!isDone) {
+              isDone = true;
+              done();
+            }
           });
         });
 
