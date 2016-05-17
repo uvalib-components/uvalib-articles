@@ -267,6 +267,8 @@ Example:
 
       /**
        * Map some of the details for an article item to a set of commonly named labels.
+       *
+       * @param {Array} items - article search result items.
        */
       _mapResults: function(items){
         return _.map(items,function(item){
@@ -311,6 +313,7 @@ Example:
       /**
        * Determine if there are facets returned with the search results that could be used to refine the search.
        *
+       * @param {Array} selFilters - The user selected facets.
        * @return {Boolean}
        */
       areFiltersAvailable: function(selFilters){
@@ -342,7 +345,7 @@ Example:
       /**
        * Set the search facets to use in the article request.
        *
-       * @param {Array}
+       * @param {Array} selFilters - The user selected facets.
        */
       setSelectedFilters: function(selFilters){
         this.emptyFilters();
