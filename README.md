@@ -1,4 +1,4 @@
-# uvalib-articles
+# uvalib-articles [![Build Status](https://travis-ci.org/uvalib-components/uvalib-articles.svg?branch=master)](https://travis-ci.org/uvalib-components/uvalib-articles)
 
 An element providing a starting point for your own reusable Polymer elements.
 

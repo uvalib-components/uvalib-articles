@@ -52,11 +52,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </h2>
 
       <div class="control">
+        <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}" on-save="saveFilters"></paper-filter-dialog>
         <template is="dom-if" if="{{isPreviousPage(rows,page,totalCount)}}">
           <paper-button raised on-tap="previousPage">Previous Page</paper-button>
         </template>
         <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
           <paper-button raised on-tap="nextPage">Next Page</paper-button>
+        </template>
+        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
+          <paper-button raised on-tap="openFacets">View Facets</paper-button>
         </template>
       </div>
 
@@ -66,12 +70,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </template>
       </ul>
 
-      <div class="control">
-        <template is="dom-if" if="{{isNextPage(rows,page,totalCount)}}">
-          <paper-button raised on-tap="openFacets">View Facets</paper-button>
-          <paper-filter-dialog id="filter-dialog" filters="{{filters}}" selected-filters="{{selectedFilters}}" on-save="saveFilters"></paper-filter-dialog>
-        </template>
-      </div>
 
     </template>
     <script>
