@@ -377,7 +377,11 @@ Example:
        * @return {Array}
        */
       getFilters: function(){
-        return this._mapFilters(this.$.ajax.lastResponse.facets);
+        if (this.$.ajax.lastResponse)
+          return this._mapFilters(this.$.ajax.lastResponse.facets);
+        else {
+          return null;
+        }
       },
 
       /**
