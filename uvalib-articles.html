@@ -23,7 +23,7 @@ Example:
       loading="{{loading}}" params="{{_params}}"
       timeout="{{timeout}}" url="{{_url}}" verbose="{{verbose}}"
       on-error="_handleError" on-request="_handleRequest" on-response="_handleResponse"
-      last-error="{{lastError}}" last-request="{{lastRequest}}" handle-as="json"></iron-ajax>
+      last-error="{{lastError}}" handle-as="json"></iron-ajax>
   </template>
 
   <script>
@@ -32,15 +32,6 @@ Example:
       is: 'uvalib-articles',
 
       properties: {
-          /**
-           * When true (or set to true) triggers a call to the generateRequest method
-           */
-          trigger: {
-            type: Boolean,
-            value: false,
-            observer: '_triggerRequest',
-            notify: true
-          },
 
           /**
            * If true, automatically performs an Ajax request when either `query`,
@@ -71,9 +62,9 @@ Example:
           },
 
           /**
-           * Defines the filters that should be used (from the available filters)
+           * Defines the filter mapping that should be used (from the available filters)
            */
-          filters: {
+          _filterMap: {
             type: Array,
             value: function(){
               return [{orig:'SubjectEDS',new:'subject',name:'Subject'},
@@ -154,14 +145,6 @@ Example:
           },
 
           /**
-           * The most recent request made by this element (raw pre-processed).
-           */
-          lastRequest: {
-            type: Object,
-            notify: true,
-          },
-
-          /**
            * lastRequest's error, if any.
            *
            * @type {Object}
@@ -192,33 +175,6 @@ Example:
             type: Object,
             value: {}
           }
-      },
-
-      // Element Lifecycle
-
-      ready: function() {
-        // `ready` is called after all elements have been configured, but
-        // propagates bottom-up. This element's children are ready, but parents
-        // are not.
-        //
-        // This is the point where you should make modifications to the DOM (when
-        // necessary), or kick off any processes the element wants to perform.
-      },
-
-      attached: function() {
-        // `attached` fires once the element and its parents have been inserted
-        // into a document.
-        //
-        // This is a good place to perform any work related to your element's
-        // visual state or active behavior (measuring sizes, beginning animations,
-        // loading resources, etc).
-      },
-
-      detached: function() {
-        // The analog to `attached`, `detached` fires when the element has been
-        // removed from a document.
-        //
-        // Use this to clean up anything you did in `attached`.
       },
 
       _handleError: function(){
@@ -311,17 +267,6 @@ Example:
       },
 
       /**
-       * Trigger the component to generate another request.
-       */
-      _triggerRequest: function(){
-        console.log('trigger request');
-        if (this.trigger) {
-          console.log('trigger');
-          this.generateRequest();
-        }
-      },
-
-      /**
        * Generate an AJAX request to get articles based on the query.
        */
       generateRequest: function(){
@@ -336,18 +281,22 @@ Example:
        */
       areFiltersAvailable: function(selFilters){
         var filters = this.getFilters();
-        for (var key in selFilters) {
-          var filter = _.find(filters,{id:key});
-          if (filter) {
-            selFilters[key].forEach(function(val){
-              if (!_.find(filter.values,{id:val}))
-                return false
-            }, this);
-          } else {
-            return false;
+        if (filters) {
+          for (var key in selFilters) {
+            var filter = _.find(filters,{id:key});
+            if (filter) {
+              selFilters[key].forEach(function(val){
+                if (!_.find(filter.values,{id:val}))
+                  return false
+                }, this);
+            } else {
+              return false;
+            }
           }
+          return true;
+        } else {
+          return true;
         }
-        return true;
       },
 
       /**
@@ -369,7 +318,7 @@ Example:
         this.emptyFilters();
         if (!_.isEmpty(selFilters)) {
           for (var key in selFilters) {
-            var filter = _.find(this.filters,{new:key});
+            var filter = _.find(this.filterMap,{new:key});
             if (filter) {
               selFilters[key].forEach(function(val){
                 this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
@@ -400,7 +349,7 @@ Example:
        */
       _mapFilters: function(fields){
         var facets = []
-        this.filters.forEach(function(filter,i){
+        this.filterMap.forEach(function(filter,i){
           if (_.findIndex(fields,{'name':filter.orig})>-1)
             this._filterValueMap[filter.new] = {};
             facets.push({
