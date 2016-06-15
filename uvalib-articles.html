@@ -318,7 +318,7 @@ Example:
         this.emptyFilters();
         if (!_.isEmpty(selFilters)) {
           for (var key in selFilters) {
-            var filter = _.find(this.filterMap,{new:key});
+            var filter = _.find(this._filterMap,{new:key});
             if (filter) {
               selFilters[key].forEach(function(val){
                 this.set('_params.f['+filter.orig+'][]', this._filterValueMap[filter.new][val]);
@@ -349,7 +349,7 @@ Example:
        */
       _mapFilters: function(fields){
         var facets = []
-        this.filterMap.forEach(function(filter,i){
+        this._filterMap.forEach(function(filter,i){
           if (_.findIndex(fields,{'name':filter.orig})>-1)
             this._filterValueMap[filter.new] = {};
             facets.push({
