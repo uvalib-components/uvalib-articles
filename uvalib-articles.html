@@ -394,7 +394,7 @@ Example:
           if (_.findIndex(fields,{'name':filter.orig})>-1)
             this._filterValueMap[filter.new] = {};
             var filterVals = _.find(fields, {name:filter.orig});
-            if (filter && filterVals.items)
+            if (filter && filterVals &&  filterVals.items)
               facets.push({
                 id: filter.new,
                 name: filter.name,
