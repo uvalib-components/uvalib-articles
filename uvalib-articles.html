@@ -363,7 +363,7 @@ Example:
             } else {
               // use the value
               this.set('_params.f['+filter.orig+'][]', selFilter);
-            }  
+            }
 
           }
         }
@@ -393,16 +393,18 @@ Example:
         this._filterMap.forEach(function(filter,i){
           if (_.findIndex(fields,{'name':filter.orig})>-1)
             this._filterValueMap[filter.new] = {};
-            facets.push({
-              id: filter.new,
-              name: filter.name,
-              values: _.map(_.find(fields, {name:filter.orig}).items,
+            var filter = _.find(fields, {name:filter.orig});
+            if (filter && filter.items)
+              facets.push({
+                id: filter.new,
+                name: filter.name,
+                values: _.map(_.find(fields, {name:filter.orig}).items,
                             function(i){
                               var id = i.value.replace(/\s/g,'_').toLowerCase();
                               this._filterValueMap[filter.new][id] = i.value;
                               return {id:id, name:i.value, count:i.hits};
                             }.bind(this))
-            });
+              });
         }, this);
         return facets;
       },
