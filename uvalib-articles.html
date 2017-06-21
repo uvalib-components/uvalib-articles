@@ -22,8 +22,9 @@ Example:
     <iron-ajax id="ajax" auto="{{auto}}" debounce-duration="{{debounceDuration}}"
       loading="{{loading}}" params="{{_params}}"
       timeout="{{timeout}}" url="{{_url}}" verbose="{{verbose}}"
-      on-error="_handleError" on-request="_handleRequest" on-response="_handleResponse"
-      last-error="{{lastError}}" handle-as="json"></iron-ajax>
+      on-error="_handleError" on-request="_handleRequest"
+      last-error="{{lastError}}" last-response="{{lastResponse}}"
+      handle-as="json"></iron-ajax>
   </template>
 
   <script>
@@ -47,7 +48,7 @@ Example:
            */
           count: {
             type: Number,
-            value: 0,
+            computed: '_computeCount(lastResponse)',
             notify: true,
             readOnly: true
           },
@@ -83,7 +84,7 @@ Example:
            */
           items: {
             type: Array,
-            value: [],
+            computed: '_computeItems(lastResponse)',
             notify: true,
             readOnly: true
           },
@@ -189,7 +190,7 @@ Example:
       _makeParams: function(query, rows, page, selectedFilters){
         var params = this._getSelectedFilterParams(selectedFilters);
         params.per_page = rows;
-        params.q = query;
+        params.q = (query)? query: "*";
         params.page = page;
         return params;
       },
@@ -202,18 +203,28 @@ Example:
         this.fire('request');
       },
 
-      /**
-       * Fired when article search results are returned.
-       *
-       * @event response
-       */
-      _handleResponse: function(){
-        if (this.$.ajax.lastResponse) {
-          this._setItems(this._mapResults(this.$.ajax.lastResponse.docs));
-          this._setCount(this.$.ajax.lastResponse.count);
-          this.fire('response');
-        }
+      _computeCount: function(response){
+        if (response.count) return response.count;
+        else return 0;
       },
+
+      _computeItems: function(response){
+        if (response.docs) return this._mapResults(response.docs);
+        else return [];
+      },
+
+//      /**
+//       * Fired when article search results are returned.
+//       *
+//       * @event response
+//       */
+//      _handleResponse: function(){
+//        if (this.$.ajax.lastResponse) {
+//          this._setItems(this._mapResults(this.$.ajax.lastResponse.docs));
+//          this._setCount(this.$.ajax.lastResponse.count);
+//          this.fire('response');
+//        }
+//      },
 
       /**
        * Update the AJAX per_page API parameter when the rows property is changed.
